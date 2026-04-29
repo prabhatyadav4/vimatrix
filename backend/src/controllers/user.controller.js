@@ -25,7 +25,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   // Step 1: Get user details from frontend
 
-  const { fullname, email, username, password } = req.body;
+  const { fullName, email, username, password } = req.body;
   // console.log("email", email);
   console.log(req.body);
   console.log("FILES: ", req.files);
@@ -34,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // Step 2: Validation - not empty
 
   if (
-    [fullname, email, username, password].some((field) => field?.trim() === "")
+    [fullName, email, username, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
@@ -70,7 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // Step 6: Create user object - create entry in DB
 
   const user = await User.create({
-    fullname,
+    fullName,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
     email,
@@ -104,7 +104,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Step 2: Check for username or email
 
-  if (!username || !email) {
+  if (!username && !email) {
     throw new ApiError(400, "Username or Email is required");
   }
 
