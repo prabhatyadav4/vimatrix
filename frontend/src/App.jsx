@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Tweets from "./pages/Tweets.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import SearchResults from "./pages/SearchResults.jsx";
 
 function App() {
   const { isOpen } = useSidebar();
@@ -43,6 +44,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/watch/:videoId" element={<VideoWatch />} />
           <Route path="/tweets" element={<Tweets />} />
+          <Route path="/search" element={<SearchResults />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
