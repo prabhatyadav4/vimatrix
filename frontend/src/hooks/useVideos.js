@@ -67,3 +67,14 @@ export const useSearchVideos = (query) => {
     staleTime: 1000 * 30, // search results go stale faster (30 seconds)
   });
 };
+
+export const useGetVideoById = (videoId) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.VIDEO, videoId],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/videos/${videoId}`);
+      return res.data.data;
+    },
+    enabled: !!videoId,
+  });
+};
