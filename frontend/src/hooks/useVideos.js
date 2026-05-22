@@ -78,3 +78,44 @@ export const useGetVideoById = (videoId) => {
     enabled: !!videoId,
   });
 };
+
+// src/hooks/useVideos.js  (add this)
+
+export const usePublishVideo = () => {
+  const queryClient = useQueryClient();
+
+  // New Concept: useState inside a hook for upload progress
+  // We expose uploadProgress so the component can show a progress bar
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const mutation = useMutation({
+    mutationFn: async (formData) => {
+      const res = await axiosInstance.post("/videos", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+
+        // New Concept: Axios onUploadProgress
+        // Axios fires this callback periodically during the upload.
+        // ProgressEvent has: loaded (bytes sent) and total (total bytes)
+        // We calculate percentage and store it in state → drives progress bar
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(percent);
+        },
+      });
+      return res.data.data;
+    },
+
+    onSuccess: () => {
+      // Invalidate video list so new video appears on Home
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VIDEOS] });
+      setUploadProgress(0); // reset bar
+    },
+
+    onError: () => setUploadProgress(0),
+  });
+
+  // Return mutation + progress together
+  return { ...mutation, uploadProgress };
+};

@@ -16,6 +16,7 @@ import Tweets from "./pages/Tweets.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
+import VideoUpload from "./pages/VideoUpload.jsx";
 
 function App() {
   const { isOpen } = useSidebar();
@@ -49,6 +50,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/liked-videos" element={<LikedVideos />} />
+            <Route path="/upload" element={<VideoUpload />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
