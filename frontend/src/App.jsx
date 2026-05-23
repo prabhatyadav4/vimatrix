@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from "react-router-dom";
 import { useSidebar } from "./context/SidebarContext.jsx";
 
@@ -17,6 +16,7 @@ import LikedVideos from "./pages/LikedVideos.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import VideoUpload from "./pages/VideoUpload.jsx";
+import Channel from "./pages/Channel.jsx";
 
 function App() {
   const { isOpen } = useSidebar();
@@ -51,6 +51,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/liked-videos" element={<LikedVideos />} />
             <Route path="/upload" element={<VideoUpload />} />
+            <Route path="/channel/:username" element={<Channel />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
