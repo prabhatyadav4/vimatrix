@@ -1,0 +1,15 @@
+export const QUERY_KEYS = {
+  VIDEOS: "videos",
+  VIDEO: "video",
+  CURRENT_USER: "currentUser",
+  COMMENTS: "comments",
+  LIKED_VIDEOS: "likedVideos",
+  PLAYLISTS: "playlists",
+  PLAYLIST: "playlist",
+  SUBSCRIBERS: "subscribers",
+  SUBSCRIBED_CHANNELS: "subscribedChannels",
+  TWEETS: "tweets",
+  CHANNEL: "channel",
+  CHANNEL_STATS: "channelStats",
+  CHANNEL_VIDEOS: "channelVideos",
+};
