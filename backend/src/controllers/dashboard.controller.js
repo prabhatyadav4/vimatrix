@@ -96,8 +96,8 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     {
         $lookup: {
             from: "likes",
-            localField = "_id",
-            foreignField = "video",
+            localField : "_id",
+            foreignField : "video",
             as: "likes",
         }
     },
