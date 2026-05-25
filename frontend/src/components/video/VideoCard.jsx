@@ -52,10 +52,7 @@ function VideoCard({ video, showChannel = true }) {
       <div className="flex gap-3 px-1">
         {/* Channel avatar */}
         {showChannel && channel && (
-          <Link
-            to={`/channel/${channel.username}`}
-            className="shrink-0 mt-0.5"
-          >
+          <Link to={`/channel/${channel.username}`} className="shrink-0 mt-0.5">
             <img
               src={channel.avatar}
               alt={channel.username}

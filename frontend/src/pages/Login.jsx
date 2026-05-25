@@ -6,13 +6,13 @@ import { useLogin } from "../hooks/useAuth.js";
 import { getErrorMessage } from "../utils/errorHandler.js";
 
 function Login() {
-  const { mutate: lofin, isPending, isError, error } = useLogin();
+  const { mutate: login, isPending, isError, error } = useLogin();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useFrom({
+  } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });

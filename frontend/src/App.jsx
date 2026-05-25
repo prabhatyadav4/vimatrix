@@ -17,7 +17,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
 const VideoUpload = lazy(() => import("./pages/VideoUpload.jsx"));
 const Tweets = lazy(() => import("./pages/Tweets.jsx"));
 const LikedVideos = lazy(() => import("./pages/LikedVideos.jsx"));
-const Playlists = lazy(() => import("./pages/Playlists.jsx"));
+const Playlists = lazy(() => import("./pages/Playlist.jsx"));
 const PlaylistDetail = lazy(() => import("./pages/PlaylistDetail.jsx"));
 const Subscriptions = lazy(() => import("./pages/Subscriptions.jsx"));
 const SearchResults = lazy(() => import("./pages/SearchResults.jsx"));

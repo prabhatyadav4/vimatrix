@@ -7,7 +7,7 @@ import {
   History,
   Users,
   Tv,
-  Twitter,
+  Bird,
   LayoutDashboard,
   LogIn,
 } from "lucide-react";
@@ -45,7 +45,7 @@ const NAV_ITEMS = [
     to: "/history",
     public: false,
   },
-  { icon: <Twitter size={20} />, label: "Tweets", to: "/tweets", public: true },
+  { icon: <Bird size={20} />, label: "Tweets", to: "/tweets", public: true },
   {
     icon: <LayoutDashboard size={20} />,
     label: "Dashboard",
