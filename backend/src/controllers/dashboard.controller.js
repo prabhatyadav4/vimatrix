@@ -42,7 +42,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     {
       $project: {
         _id: 0,
-        totalVidoes: 1,
+        totalVideos: 1,
         totalViews: 1,
         totalLikes: 1,
       },
@@ -53,7 +53,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     totalVideos = 0,
     totalViews = 0,
     totalLikes = 0,
-  } = videoStats[0] || {};
+  } = VideoStats[0] || {};
 
   // Step 3: Shape the final stats object
   const stats = {

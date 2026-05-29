@@ -163,7 +163,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         pipeline: [{ $project: { username: 1, avatar: 1, fullName: 1 } }],
       },
     },
-    { $unwind: "&owner" },
+    { $unwind: "$owner" },
     {
       $project: {
         videoFile: 1,
