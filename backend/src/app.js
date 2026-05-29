@@ -10,6 +10,48 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import mongoSanitize from "express-mongo-sanitize";
+
+// Helmet: sets secure HTTP headers automatically
+// Protects against clickjacking, XSS, MIME sniffing etc.
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+
+// Rate limiting: prevent brute force attacks
+// Max 100 requests per 15 minutes per IP
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/api/", limiter);
+
+// Stricter limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // only 10 login attempts per 15 min
+  message: {
+    success: false,
+    message: "Too many login attempts. Try again later.",
+  },
+});
+app.use("/api/v1/users/login", authLimiter);
+app.use("/api/v1/users/register", authLimiter);
+
+// Mongo sanitize: prevents NoSQL injection attacks
+// e.g. { "email": { "$gt": "" } } → stripped to {}
+app.use(mongoSanitize());
+
 // CORS must be the FIRST middleware
 // It tells the browser: "I allow requests from this origin"
 app.use(

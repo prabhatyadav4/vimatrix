@@ -8,6 +8,7 @@ import { store } from "./app/store.js";
 import { SidebarProvider } from "./context/SidebarContext.jsx";
 import App from "./App.jsx";
 import "./index.css";
+import ErrorBoundary from "./components/common/ErrorBoundary.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,16 +22,18 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <SidebarProvider>
-            <App />
-          </SidebarProvider>
-        </BrowserRouter>
-        {/* DevTools only in development */}
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-      </QueryClientProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <SidebarProvider>
+              <App />
+            </SidebarProvider>
+          </BrowserRouter>
+          {/* DevTools only in development */}
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        </QueryClientProvider>
+      </Provider>
+    </ErrorBoundary>
   </StrictMode>,
 );

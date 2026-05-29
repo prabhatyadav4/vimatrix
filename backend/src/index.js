@@ -1,3 +1,6 @@
+import { validateEnv } from "./utils/validateEnv.js";
+validateEnv();
+
 import app from "./app.js";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
@@ -16,39 +19,6 @@ connectDB()
     console.log("MongoDB connected successfully", error);
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 /*
 
 import express from "express";

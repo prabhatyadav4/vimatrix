@@ -39,6 +39,13 @@ const videoSchema = new Schema(
   { timestamps: true }
 );
 
-videoSchema.plugin(mongooseAggregatePaginate)
+// Add indexes for fields you query/sort by frequently
+
+videoSchema.index({ owner: 1 }); // fetch videos by user
+videoSchema.index({ createdAt: -1 }); // sort by newest
+videoSchema.index({ title: "text" }); // text search on title
+videoSchema.index({ isPublished: 1 }); // filter published videos
+
+videoSchema.plugin(mongooseAggregatePaginate);
 
 export const Video = mongoose.model("Video", videoSchema);
