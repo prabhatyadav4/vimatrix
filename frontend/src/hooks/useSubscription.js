@@ -55,3 +55,15 @@ export const useToggleSubscription = (channelId) => {
     },
   });
 };
+
+export const useGetSubscribedChannels = (subscriberId) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SUBSCRIBED_CHANNELS, subscriberId],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/subscriptions/u/${subscriberId}`);
+      return res.data.data;
+    },
+    enabled: !!subscriberId,
+  });
+};
+

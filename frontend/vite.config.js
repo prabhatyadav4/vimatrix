@@ -28,18 +28,30 @@ export default defineConfig({
     // Production optimisations
     rollupOptions: {
       output: {
-        manualChunks: {
-          // React ecosystem
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-
-          // React Query
-          "vendor-query": ["@tanstack/react-query"],
-
-          // Redux
-          "vendor-redux": ["@reduxjs/toolkit", "react-redux"],
-
-          // Forms & validation
-          "vendor-form": ["react-hook-form", "zod", "@hookform/resolvers"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("react-dom") ||
+              id.includes("react-router-dom") ||
+              id.includes("react/")
+            ) {
+              return "vendor-react";
+            }
+            if (id.includes("@tanstack/react-query")) {
+              return "vendor-query";
+            }
+            if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) {
+              return "vendor-redux";
+            }
+            if (
+              id.includes("react-hook-form") ||
+              id.includes("zod") ||
+              id.includes("@hookform/resolvers")
+            ) {
+              return "vendor-form";
+            }
+            return "vendor";
+          }
         },
       },
     },
