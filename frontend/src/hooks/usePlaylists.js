@@ -12,3 +12,17 @@ export const useGetUserPlaylists = (userId) => {
     enabled: !!userId,
   });
 };
+
+export const useCreatePlaylist = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosInstance.post("/playlist", data);
+      return res.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PLAYLISTS] });
+    },
+  });
+};

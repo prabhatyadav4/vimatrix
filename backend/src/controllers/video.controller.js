@@ -27,7 +27,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   // Step 4: Build filter condition
   // If query exists, search in title (case-insensitive)
-  const matchStage = query ? { title: { $regex: query, $options: "i" } } : {};
+  const matchStage = { isPublished: true };
+  if (query) matchStage.title = { $regex: query, $options: "i" };
 
   // Step 5: Build sorting object dynamically
   const sortStage = {
@@ -112,7 +113,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
   // Step 2: Check files were uploaded via multer
   const videoLocalPath = req.files?.videoFile?.[0]?.path;
-  const thumbnailLocalPath = req.files?.thumbnail?.[0].path;
+  const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
 
   if (!videoLocalPath) throw new ApiError(400, "Video file is required.");
   if (!thumbnailLocalPath) throw new ApiError(400, "Thumbnail is required.");
@@ -186,10 +187,17 @@ const getVideoById = asyncHandler(async (req, res) => {
   // Step 3: Increment view count
   await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
 
+  // Step 3.5: Don't show unpublished videos to non-owners
+  if (!video[0].isPublished && video[0].owner._id.toString() !== req.user?._id?.toString()) {
+    throw new ApiError(404, "Video not found.");
+  }
+
   // Step 4: Add video to the logged-in user's watch history
-  await User.findByIdAndUpdate(req.user._id, {
-    $addToSet: { watchHistory: videoId },
-  });
+  if (req.user?._id) {
+    await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: { watchHistory: videoId },
+    });
+  }
 
   // Step 5: Send response
   return res
@@ -224,12 +232,13 @@ const updateVideo = asyncHandler(async (req, res) => {
   // Step 4: Build the update object dynamically
   const updateFields = {};
   if (title?.trim()) updateFields.title = title.trim();
-  if (description?.trim()) updateFields.descripion = description.trim();
+  if (description?.trim()) updateFields.description = description.trim();
 
   // Step 5: Upload new thumbnail only if provided
   if (thumbnailLocalPath) {
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     if (!thumbnail?.url) throw new ApiError(500, "Failed to upload thumbnail.");
+    updateFields.thumbnail = thumbnail.url;
   }
 
   // Step 6: Apply update
@@ -306,8 +315,8 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { isPublished: updateVideo.isPublished },
-        `Video ${updateVideo.isPublished ? "Published" : "Unpublished"} Successfully.`
+        { isPublished: updatedVideo.isPublished },
+        `Video ${updatedVideo.isPublished ? "Published" : "Unpublished"} Successfully.`
       )
     );
 });

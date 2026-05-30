@@ -1,10 +1,10 @@
 // src/pages/VideoWatch.jsx
-import { useEffect }              from "react";
+import { useEffect, useState }    from "react";
 import { useParams, Link }        from "react-router-dom";
 import {
   Share2, ListPlus, MoreHorizontal, Eye
 } from "lucide-react";
-import { useGetVideoById }        from "../hooks/useVideos.js";
+import { useGetVideoById, useGetAllVideos } from "../hooks/useVideos.js";
 import { useToggleSubscription }  from "../hooks/useSubscription.js";
 import { useCurrentUser }         from "../hooks/useAuth.js";
 import LikeButton                 from "../components/video/LikeButton.jsx";
@@ -13,6 +13,7 @@ import Loader                     from "../components/common/Loader.jsx";
 import ErrorMessage               from "../components/common/ErrorMessage.jsx";
 import { formatViews }            from "../utils/formatViews.js";
 import { formatDate }             from "../utils/formatDate.js";
+import { formatDuration }         from "../utils/formatDuration.js";
 
 function VideoWatch() {
   // Read :videoId from the URL
@@ -75,7 +76,7 @@ function VideoWatch() {
             className="w-full h-full object-contain"
             // New Concept: onEnded event
             // You could track watch history completion here
-            onEnded={() => console.log("Video ended")}
+            onEnded={() => {}}
           />
         </div>
 

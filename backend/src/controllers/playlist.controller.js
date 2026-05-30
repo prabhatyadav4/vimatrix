@@ -100,6 +100,41 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         _id: new mongoose.Types.ObjectId(playlistId),
       },
     },
+    // Lookup videos with their details
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                { $project: { username: 1, avatar: 1, fullName: 1 } },
+              ],
+            },
+          },
+          { $unwind: "$owner" },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              thumbnail: 1,
+              duration: 1,
+              views: 1,
+              createdAt: 1,
+              owner: 1,
+            },
+          },
+        ],
+      },
+    },
+    // Lookup playlist owner
     {
       $lookup: {
         from: "users",
@@ -110,29 +145,6 @@ const getPlaylistById = asyncHandler(async (req, res) => {
       },
     },
     { $unwind: "$owner" },
-    {
-      $project: {
-        _id: 1,
-        title: 1,
-        thumbnail: 1,
-        duration: 1,
-        views: 1,
-        createdAt: 1,
-        owner: 1,
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-        pipeline: [{ $project: { username: 1, avatar: 1, fullName: 1 } }],
-      },
-    },
-    {
-      $unwind: "$owner",
-    },
     {
       $project: {
         _id: 1,
@@ -168,7 +180,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   const playlist = await Playlist.findById(playlistId);
   if (!playlist) throw new ApiError(404, "Playlist not found");
 
-  if (!playlist.owner.toString() != req.user._id.toString()) {
+  if (playlist.owner.toString() !== req.user._id.toString()) {
     throw new ApiError(403, "You are not authorized to modify the playlist.");
   }
 
@@ -208,7 +220,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   // Step 2: Find playlist and verify ownership
   const playlist = await Playlist.findById(playlistId);
   if (!playlist) throw new ApiError(404, "Playlist not found.");
-  if (!playlist.owner.toString() !== req.user._id.toString()) {
+  if (playlist.owner.toString() !== req.user._id.toString()) {
     throw new ApiError(403, "You are not authorized to modify this playlist.");
   }
 

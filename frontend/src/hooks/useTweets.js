@@ -29,8 +29,8 @@ export const useCreateTweet = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TWEETS] });
     },
 
-    onError: (error) => {
-      console.error("Failed to create tweet: ", error);
+    onError: () => {
+      // Error is surfaced via mutation.isError/mutation.error in the component
     },
   });
 };

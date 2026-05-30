@@ -1,7 +1,7 @@
 import { validateEnv } from "./utils/validateEnv.js";
 validateEnv();
 
-import app from "./app.js";
+import { app } from "./app.js";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 
@@ -16,7 +16,7 @@ connectDB()
     });
   })
   .catch((error) => {
-    console.log("MongoDB connected successfully", error);
+    console.error("MongoDB connection FAILED:", error);
   });
 
 /*

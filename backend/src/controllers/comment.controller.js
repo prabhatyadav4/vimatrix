@@ -105,7 +105,7 @@ const addComment = asyncHandler(async (req, res) => {
 
 const updateComment = asyncHandler(async (req, res) => {
   // TODO: update a comment
-  const { commnetId } = req.params;
+  const { commentId } = req.params;
   const { content } = req.body;
 
   // Step 1: Validate inputs
@@ -129,7 +129,7 @@ const updateComment = asyncHandler(async (req, res) => {
   const updatedComment = await Comment.findByIdAndUpdate(
     commentId,
     { $set: { content: content.trim() } },
-    { new: trim }
+    { new: true }
   );
 
   // Step 4: Send response
@@ -153,7 +153,7 @@ const deleteComment = asyncHandler(async (req, res) => {
   const comment = await Comment.findById(commentId);
   if (!comment) throw new ApiError(404, "Comment not found.");
 
-  if (!comment.owner.toString() !== req.user._id.toString()) {
+  if (comment.owner.toString() !== req.user._id.toString()) {
     throw new ApiError(403, "You are not authorized to delete this comment.");
   }
 

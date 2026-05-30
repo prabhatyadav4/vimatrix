@@ -77,10 +77,10 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
         localField: "subscriber",
         foreignField: "_id",
         as: "subscriber",
-        pipeline: [{ $project: { username: 1, avatar: 1, fullname: 1 } }],
+        pipeline: [{ $project: { username: 1, avatar: 1, fullName: 1 } }],
       },
     },
-    { unwind: "$subscriber" },
+    { $unwind: "$subscriber" },
     {
       $lookup: {
         from: "subscriptions",
@@ -96,7 +96,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
                       new mongoose.Types.ObjectId(channelId),
                     ],
                   },
-                  { $eq: ["$channel", "$$subsriberId"] },
+                  { $eq: ["$channel", "$$subscriberId"] },
                 ],
               },
             },
@@ -147,7 +147,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
   const subscribedChannels = await Subscription.aggregate([
     {
       $match: {
-        subscriber: new mongoose.Types.ObjectId(subsriberId),
+        subscriber: new mongoose.Types.ObjectId(subscriberId),
       },
     },
     {
