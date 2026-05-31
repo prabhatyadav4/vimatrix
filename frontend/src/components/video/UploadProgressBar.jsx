@@ -29,7 +29,7 @@ function UploadProgressBar({ progress }) {
       <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
         {isBrowserUploadDone ? (
           /* Indeterminate shimmer animation for server processing */
-          <div className="h-full w-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse" />
+          <div className="h-full w-full rounded-full bg-linear-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse" />
         ) : (
           /* Determinate bar for browser upload */
           <div

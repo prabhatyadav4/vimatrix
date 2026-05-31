@@ -52,7 +52,7 @@ function TweetCard({ tweet, onDelete }) {
         </div>
 
         {/* Content */}
-        <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap break-words">
+        <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">
           {tweet.content}
         </p>
 
