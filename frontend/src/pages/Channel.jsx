@@ -5,6 +5,8 @@ import ChannelTabs from "../components/channel/ChannelTabs.jsx";
 import ChannelVideosTab from "../components/channel/tabs/ChannelVideosTab.jsx";
 import ChannelPlaylistsTab from "../components/channel/tabs/ChannelPlaylistsTab.jsx";
 import ChannelTweetsTab from "../components/channel/tabs/ChannelTweetsTab.jsx";
+import ChannelSubscribersTab from "../components/channel/tabs/ChannelSubscribersTab.jsx";
+import ChannelSubscriptionsTab from "../components/channel/tabs/ChannelSubscriptionsTab.jsx";
 import ChannelAboutTab from "../components/channel/tabs/ChannelAboutTab.jsx";
 import Loader from "../components/common/Loader.jsx";
 import ErrorMessage from "../components/common/ErrorMessage.jsx";
@@ -43,6 +45,8 @@ function Channel() {
     videos: <ChannelVideosTab userId={channel._id} />,
     playlists: <ChannelPlaylistsTab userId={channel._id} />,
     tweets: <ChannelTweetsTab userId={channel._id} />,
+    subscribers: <ChannelSubscribersTab userId={channel._id} />,
+    subscriptions: <ChannelSubscriptionsTab userId={channel._id} />,
     about: <ChannelAboutTab channel={channel} />,
   };
 

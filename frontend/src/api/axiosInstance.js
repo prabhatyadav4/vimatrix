@@ -39,7 +39,11 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const original = error.config;
 
-    if (error.response?.status === 401 && !original._retry) {
+    // Skip token refresh for auth endpoints — their 401s mean "invalid credentials"
+    const isAuthEndpoint = ["/users/login", "/users/register", "/users/refresh-token"]
+      .some((url) => original.url?.includes(url));
+
+    if (error.response?.status === 401 && !original._retry && !isAuthEndpoint) {
       if (isRefreshing) {
         // Another refresh is in progress — queue this request
         return new Promise((resolve, reject) => {

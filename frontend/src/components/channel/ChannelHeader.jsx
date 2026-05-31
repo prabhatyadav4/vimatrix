@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import { useToggleSubscription } from "../../hooks/useSubscription.js";
 import { useCurrentUser } from "../../hooks/useAuth.js";
@@ -7,7 +8,8 @@ import { formatViews } from "../../utils/formatViews.js";
 
 function ChannelHeader({ channel }) {
   const currentUser = useCurrentUser();
-  const isOwner = currentUser?._id === channel?.owner;
+  const isOwner = currentUser?._id === channel?._id;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [editOpen, setEditOpen] = useState(false);
 
@@ -123,19 +125,25 @@ function ChannelHeader({ channel }) {
 
         {/* Stats row */}
         <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
-          <span>
-            <span className="text-white font-medium">
+          <button
+            onClick={() => setSearchParams({ tab: "subscribers" })}
+            className="hover:text-blue-400 transition cursor-pointer"
+          >
+            <span className="text-white font-medium hover:text-blue-400 transition">
               {formatViews(channel?.subscribersCount)}
             </span>{" "}
             subscribers
-          </span>
+          </button>
           <span>·</span>
-          <span>
-            <span className="text-white font-medium">
-              {channel?.channelsSubscribedToCount ?? 0}
+          <button
+            onClick={() => setSearchParams({ tab: "subscriptions" })}
+            className="hover:text-blue-400 transition cursor-pointer"
+          >
+            <span className="text-white font-medium hover:text-blue-400 transition">
+              {channel?.channelSubscribedToCount ?? 0}
             </span>{" "}
             subscriptions
-          </span>
+          </button>
         </div>
       </div>
 

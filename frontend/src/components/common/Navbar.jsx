@@ -22,10 +22,11 @@ function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams] = useSearchParams();
 
-  // Pre-fill search box if user is already on /search?query=...
+  // Sync search box with URL query param
+  // Clear when navigating away from /search
   useEffect(() => {
     const q = searchParams.get("query");
-    if (q) setSearchQuery(q);
+    setSearchQuery(q || "");
   }, [searchParams]);
 
   const handleSearch = (e) => {

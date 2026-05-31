@@ -1,6 +1,6 @@
 // src/pages/VideoWatch.jsx
 import { useEffect, useState }    from "react";
-import { useParams, Link }        from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Share2, ListPlus, MoreHorizontal, Eye
 } from "lucide-react";
@@ -9,6 +9,7 @@ import { useToggleSubscription }  from "../hooks/useSubscription.js";
 import { useCurrentUser }         from "../hooks/useAuth.js";
 import LikeButton                 from "../components/video/LikeButton.jsx";
 import CommentSection             from "../components/comment/CommentSection.jsx";
+import AddToPlaylistModal         from "../components/playlist/AddToPlaylistModal.jsx";
 import Loader                     from "../components/common/Loader.jsx";
 import ErrorMessage               from "../components/common/ErrorMessage.jsx";
 import { formatViews }            from "../utils/formatViews.js";
@@ -19,6 +20,11 @@ function VideoWatch() {
   // Read :videoId from the URL
   const { videoId } = useParams();
   const user        = useCurrentUser();
+  const navigate    = useNavigate();
+
+  // Save to playlist modal
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [shareToast, setShareToast] = useState(false);
 
   const {
     data: video,
@@ -29,7 +35,7 @@ function VideoWatch() {
   } = useGetVideoById(videoId);
 
   const { mutate: toggleSubscription, isPending: isSubPending } =
-    useToggleSubscription(video?.channel?._id);
+    useToggleSubscription(video?.channel?._id, videoId);
 
   // ── Update page title ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -108,9 +114,23 @@ function VideoWatch() {
               isLikedByMe={video.isLikedByMe}
             />
 
-            <ActionButton icon={<ListPlus size={18} />} label="Save" />
-            <ActionButton icon={<Share2 size={18} />}   label="Share" />
-            <ActionButton icon={<MoreHorizontal size={18} />} />
+            <ActionButton
+              icon={<ListPlus size={18} />}
+              label="Save"
+              onClick={() => {
+                if (!user) { navigate("/login"); return; }
+                setSaveModalOpen(true);
+              }}
+            />
+            <ActionButton
+              icon={<Share2 size={18} />}
+              label={shareToast ? "Copied!" : "Share"}
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setShareToast(true);
+                setTimeout(() => setShareToast(false), 2000);
+              }}
+            />
 
           </div>
         </div>
@@ -167,6 +187,13 @@ function VideoWatch() {
 
         {/* ── Comments ─────────────────────────────────────────────────── */}
         <CommentSection videoId={videoId} />
+
+        {/* ── Save to Playlist Modal ───────────────────────────────────── */}
+        <AddToPlaylistModal
+          isOpen={saveModalOpen}
+          onClose={() => setSaveModalOpen(false)}
+          videoId={videoId}
+        />
 
       </div>
 

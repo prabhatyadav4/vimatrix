@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Pencil, Trash2, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "../common/ToggleSwitch.jsx";
@@ -6,7 +5,7 @@ import { formatViews } from "../../utils/formatViews.js";
 import { formatDate } from "../../utils/formatDate.js";
 import { useTogglePublish } from "../../hooks/useDashboard.js";
 
-function VideoRow({ video, onDeleteClick }) {
+function VideoRow({ video, onDeleteClick, onEditClick }) {
   const { mutate: togglePublish, isPending } = useTogglePublish();
 
   return (
@@ -80,12 +79,12 @@ function VideoRow({ video, onDeleteClick }) {
       {/* ── Actions ──────────────────────────────────────────────────── */}
       <td className="py-4 pl-3 pr-4">
         <div className="flex items-center gap-2">
-          <Link
-            to={`/video/edit/${video._id}`}
+          <button
+            onClick={() => onEditClick(video)}
             className="p-2 text-gray-500 hover:text-white hover:bg-gray-700 rounded-lg transition"
           >
             <Pencil size={15} />
-          </Link>
+          </button>
           <button
             onClick={() => onDeleteClick(video)}
             className="p-2 text-gray-500 hover:text-red-500 hover:bg-gray-700 rounded-lg transition"

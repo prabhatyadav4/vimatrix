@@ -5,6 +5,7 @@ import { useDeleteVideo } from "../../hooks/useDashboard.js";
 import useDebounce from "../../hooks/useDebounce.js";
 import VideoRow from "./VideoRow.jsx";
 import DeleteConfirmModal from "./DeleteConfirmModal.jsx";
+import EditVideoModal from "./EditVideoModal.jsx";
 import Loader from "../common/Loader.jsx";
 
 function VideoManager() {
@@ -24,12 +25,21 @@ function VideoManager() {
   const [videoToDelete, setVideoToDelete] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  // Edit modal state
+  const [videoToEdit, setVideoToEdit] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+
   const { mutate: deleteVideo, isPending: isDeleting } = useDeleteVideo();
 
   // ── Open delete modal ──────────────────────────────────────────────────────
   const handleDeleteClick = (video) => {
     setVideoToDelete(video);
     setDeleteModalOpen(true);
+  };
+
+  const handleEditClick = (video) => {
+    setVideoToEdit(video);
+    setEditModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
@@ -192,6 +202,7 @@ function VideoManager() {
                   key={video._id}
                   video={video}
                   onDeleteClick={handleDeleteClick}
+                  onEditClick={handleEditClick}
                 />
               ))
             ) : (
@@ -215,6 +226,16 @@ function VideoManager() {
         onConfirm={handleConfirmDelete}
         video={videoToDelete}
         isPending={isDeleting}
+      />
+
+      {/* Edit video modal */}
+      <EditVideoModal
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+          setVideoToEdit(null);
+        }}
+        video={videoToEdit}
       />
     </div>
   );

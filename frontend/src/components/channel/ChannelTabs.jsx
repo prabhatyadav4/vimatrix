@@ -10,7 +10,7 @@
 
 import { useSearchParams } from "react-router-dom";
 
-const TABS = ["Videos", "Playlists", "Tweets", "About"];
+const TABS = ["Videos", "Playlists", "Tweets", "Subscribers", "Subscriptions", "About"];
 
 function ChannelTabs() {
   const [searchParams, setSearchParams] = useSearchParams();

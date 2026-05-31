@@ -5,7 +5,7 @@ function ChannelAboutTab({ channel }) {
   // Format ISO date to readable string
   const joinedDate = channel?.createdAt
     ? new Date(channel.createdAt).toLocaleDateString("en-IN", {
-        year: "month",
+        year: "numeric",
         month: "long",
         day: "numeric",
       })

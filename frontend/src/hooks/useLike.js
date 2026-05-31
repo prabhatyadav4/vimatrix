@@ -70,3 +70,17 @@ export const useGetLikedVideos = () => {
     },
   });
 };
+
+export const useToggleTweetLike = (tweetId) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axiosInstance.post(`/likes/toggle/t/${tweetId}`);
+      return res.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TWEETS] });
+    },
+  });
+};

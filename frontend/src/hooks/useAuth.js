@@ -19,7 +19,7 @@ export const useRegister = () => {
       const res = await axiosInstance.post("/users/register", formData);
       return res.data;
     },
-    onSuccess: () => navigate("/login"),
+    onSuccess: () => navigate("/login", { state: { registrationSuccess: true } }),
   });
 };
 

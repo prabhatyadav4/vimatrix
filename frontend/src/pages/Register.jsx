@@ -37,24 +37,20 @@ function Register() {
   // not the entire form at once.
 
   const goToNextStep = async () => {
-    let fieldsToValidate = [];
-
+    // Step 1: validate account fields via RHF
     if (currentStep === 1) {
-      fieldsToValidate = [
+      const isValid = await trigger([
         "fullName",
         "username",
         "email",
         "password",
         "confirmPassword",
-      ];
+      ]);
+      if (!isValid) return;
     }
 
-    // trigger() validates given fields and returns true if all pass
-    const isValid = await trigger(fieldsToValidate);
-    if (!isValid) return; // stop if current step has errors
-
+    // Step 2: validate avatar (not an RHF field, manual check)
     if (currentStep === 2) {
-      // Avatar is required
       if (!avatar) {
         setAvatarError("Avatar is required.");
         return;
@@ -67,6 +63,7 @@ function Register() {
 
   // ── Final submit ───────────────────────────────────────────────────────────
   const onSubmit = (data) => {
+    if (currentStep !== 3) return;
     // Build FormData to carry both text fields AND file objects
     const formData = new FormData();
     formData.append("fullName", data.fullName);
@@ -96,7 +93,16 @@ function Register() {
 
         {/* Form card */}
         <div className="bg-gray-900 rounded-2xl p-6 space-y-5">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            onSubmit={(e) => {
+              if (currentStep < 3) {
+                e.preventDefault();
+                goToNextStep();
+              } else {
+                handleSubmit(onSubmit)(e);
+              }
+            }}
+          >
             {/* ════════════ STEP 1: Account Info ════════════ */}
             {currentStep === 1 && (
               <div className="space-y-4">
@@ -237,6 +243,7 @@ function Register() {
               {/* Next OR Submit */}
               {currentStep < 3 ? (
                 <button
+                  key="continue-btn"
                   type="button"
                   onClick={goToNextStep}
                   className="px-5 py-2.5 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition font-medium"
@@ -245,6 +252,7 @@ function Register() {
                 </button>
               ) : (
                 <button
+                  key="submit-btn"
                   type="submit"
                   disabled={isPending}
                   className="px-5 py-2.5 text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-xl transition font-medium"

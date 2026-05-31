@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { loginSchema } from "../schemas/auth.schema.js";
 import { useLogin } from "../hooks/useAuth.js";
 import { getErrorMessage } from "../utils/errorHandler.js";
 
 function Login() {
   const { mutate: login, isPending, isError, error } = useLogin();
+  const location = useLocation();
+  const registrationSuccess = location.state?.registrationSuccess;
 
   const {
     register,
@@ -30,6 +32,12 @@ function Login() {
             Sign in to your VideoTube account
           </p>
         </div>
+
+        {registrationSuccess && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm rounded-xl px-4 py-3 font-medium">
+            Account created successfully! You can now sign in.
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Email field */}

@@ -892,12 +892,12 @@
               }
             },
             "url": {
-              "raw": "{{server}}/playlists",
+              "raw": "{{server}}/playlist",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists"
+                "playlist"
               ]
             }
           },
@@ -909,12 +909,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{server}}/playlists/user/{{userId}}",
+              "raw": "{{server}}/playlist/user/{{userId}}",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists",
+                "playlist",
                 "user",
                 "{{userId}}"
               ]
@@ -928,12 +928,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{server}}/playlists/{{playlistId}}",
+              "raw": "{{server}}/playlist/{{playlistId}}",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists",
+                "playlist",
                 "{{playlistId}}"
               ]
             }
@@ -973,12 +973,12 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{server}}/playlists/{{playlistId}}",
+              "raw": "{{server}}/playlist/{{playlistId}}",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists",
+                "playlist",
                 "{{playlistId}}"
               ]
             }
@@ -991,12 +991,12 @@
             "method": "PATCH",
             "header": [],
             "url": {
-              "raw": "{{server}}/playlists/add/{{videoId}}/{{playlistId}}",
+              "raw": "{{server}}/playlist/add/{{videoId}}/{{playlistId}}",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists",
+                "playlist",
                 "add",
                 "{{videoId}}",
                 "{{playlistId}}"
@@ -1011,12 +1011,12 @@
             "method": "PATCH",
             "header": [],
             "url": {
-              "raw": "{{server}}/playlists/remove/{{videoId}}/{{playlistId}}",
+              "raw": "{{server}}/playlist/remove/{{videoId}}/{{playlistId}}",
               "host": [
                 "{{server}}"
               ],
               "path": [
-                "playlists",
+                "playlist",
                 "remove",
                 "{{videoId}}",
                 "{{playlistId}}"

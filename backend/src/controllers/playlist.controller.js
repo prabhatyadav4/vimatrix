@@ -11,13 +11,11 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
   // Step 1: Validate fields
   if (!name?.trim()) throw new ApiError(400, "Playlist name is required.");
-  if (!description?.trim())
-    throw new ApiError(400, "Playlist description is required.");
 
   // Step 2: Create the playlist
   const playlist = await Playlist.create({
     name: name.trim(),
-    description: description.trim(),
+    description: description?.trim() || "",
     owner: req.user._id,
     videos: [],
   });

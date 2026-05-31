@@ -66,3 +66,23 @@ export const useDeleteVideo = () => {
     },
   });
 };
+
+// Update video (title, description, thumbnail)
+export const useUpdateVideo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ videoId, formData }) => {
+      const res = await axiosInstance.patch(`/videos/${videoId}`, formData);
+      return res.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.CHANNEL_VIDEOS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.VIDEOS],
+      });
+    },
+  });
+};

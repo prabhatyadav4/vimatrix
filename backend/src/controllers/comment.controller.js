@@ -109,7 +109,7 @@ const updateComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
 
   // Step 1: Validate inputs
-  if (!isValidObjectId(commnetId)) {
+  if (!isValidObjectId(commentId)) {
     throw new ApiError(400, "Invalid comment ID.");
   }
 

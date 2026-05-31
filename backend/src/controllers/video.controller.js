@@ -16,6 +16,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     query = "",
     sortBy = "createdAt",
     sortType = "desc",
+    userId,
   } = req.query;
 
   // Step 2: Convert page and limit to numbers
@@ -27,8 +28,10 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   // Step 4: Build filter condition
   // If query exists, search in title (case-insensitive)
+  // If userId exists, filter by owner
   const matchStage = { isPublished: true };
   if (query) matchStage.title = { $regex: query, $options: "i" };
+  if (userId) matchStage.owner = new mongoose.Types.ObjectId(userId);
 
   // Step 5: Build sorting object dynamically
   const sortStage = {
@@ -152,19 +155,66 @@ const getVideoById = asyncHandler(async (req, res) => {
   if (!isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid video ID.");
   }
-  // Step 2: Aggregate to fetch video with owner details
+
+  // Step 2: Aggregate to fetch video with owner details, likes & subscription info
   const video = await Video.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(videoId) } },
+
+    // Lookup owner → output as "channel" to match frontend expectations
     {
       $lookup: {
         from: "users",
         localField: "owner",
         foreignField: "_id",
-        as: "owner",
+        as: "channel",
         pipeline: [{ $project: { username: 1, avatar: 1, fullName: 1 } }],
       },
     },
-    { $unwind: "$owner" },
+    { $unwind: "$channel" },
+
+    // Lookup likes for this video
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "video",
+        as: "likes",
+      },
+    },
+
+    // Lookup subscribers for the channel (owner)
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "owner",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+
+    // Compute counts and boolean flags
+    {
+      $addFields: {
+        likesCount: { $size: "$likes" },
+        isLikedByMe: {
+          $cond: {
+            if: { $in: [req.user?._id, "$likes.likedBy"] },
+            then: true,
+            else: false,
+          },
+        },
+        "channel.subscribersCount": { $size: "$subscribers" },
+        "channel.isSubscribed": {
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+
+    // Project final shape
     {
       $project: {
         videoFile: 1,
@@ -175,7 +225,10 @@ const getVideoById = asyncHandler(async (req, res) => {
         views: 1,
         isPublished: 1,
         createdAt: 1,
-        owner: 1,
+        channel: 1,
+        likesCount: 1,
+        isLikedByMe: 1,
+        owner: "$channel._id", // keep owner ref for permission checks
       },
     },
   ]);
@@ -188,7 +241,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
 
   // Step 3.5: Don't show unpublished videos to non-owners
-  if (!video[0].isPublished && video[0].owner._id.toString() !== req.user?._id?.toString()) {
+  if (!video[0].isPublished && video[0].owner.toString() !== req.user?._id?.toString()) {
     throw new ApiError(404, "Video not found.");
   }
 

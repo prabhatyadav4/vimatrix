@@ -5,9 +5,8 @@ import {
 } from "../hooks/useTweets.js";
 import { useCurrentUser } from "../hooks/useAuth.js";
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import TweetCard from "../components/tweet/TweetCard.jsx";
 import { getErrorMessage } from "../utils/errorHandler.js";
-import { formatDate } from "../utils/formatDate.js";
 
 function Tweets() {
   const user = useCurrentUser();
@@ -66,25 +65,11 @@ function Tweets() {
       ) : (
         <div className="space-y-4">
           {tweets?.map((tweet) => (
-            <div
+            <TweetCard
               key={tweet._id}
-              className="bg-gray-900 rounded-xl p-4 flex justify-between"
-            >
-              <div>
-                <p className="text-white">{tweet.content}</p>
-                <p className="text-gray-500 text-xs mt-2">
-                  {formatDate(tweet.createdAt)}
-                </p>
-              </div>
-              {tweet.owner._id === user?._id && (
-                <button
-                  onClick={() => deleteTweet(tweet._id)}
-                  className="text-gray-500 hover:text-red-500 transition"
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
-            </div>
+              tweet={tweet}
+              onDelete={deleteTweet}
+            />
           ))}
         </div>
       )}

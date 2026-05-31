@@ -185,7 +185,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     {
       $project: {
         _id: 0,
-        subsribedAt: "$createdAt",
+        subscribedAt: "$createdAt",
         channel: 1,
         latestVideo: { $first: "$latestVideo" },
       },
